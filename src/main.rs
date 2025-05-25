@@ -4,6 +4,7 @@ fn main() {
 }
 
 struct Game {
+    game_type : GameType,
     players : Vec<Player>,
     board : Board,
     notation: Notation,
@@ -13,6 +14,7 @@ struct Game {
 
 impl Game {
     fn new() -> Self {
+        let game_type = GameType::Checkers;
         let mut players = Vec::new();
         for _i in 0..2 {
             let player = Player::new();
@@ -22,14 +24,23 @@ impl Game {
         let notation = Notation::new();
         let clock = None;
         let result = None;
-        Game{players, board, notation, clock, result}
+        Game{game_type, players, board, notation, clock, result}
     }
 
     fn run(&mut self) {
 
     }
-} 
+}
 
+enum GameType {
+    Checkers,
+    Chess,
+    BugHouse,
+}
+
+impl GameType {
+
+}
 struct Player {
 
 }
