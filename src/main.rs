@@ -4,9 +4,9 @@ fn main() {
 }
 
 struct Game {
-    game_type : GameType,
-    players : Vec<Player>,
     board : Board,
+    players : Vec<Player>,
+    pieces : Vec<Box<dyn Piece>>,
     notation: Notation,
     clock : Option<GameClock>,
     result : Option<GameResult>,
@@ -14,17 +14,18 @@ struct Game {
 
 impl Game {
     fn new() -> Self {
-        let game_type = GameType::Checkers;
+        let board = Board::new();
         let mut players = Vec::new();
         for _i in 0..2 {
-            let player = Player::new();
-            players.push(player);
+            players.push(Player::new());
         }
-        let board = Board::new();
+        let mut pieces : Vec<Box<dyn Piece>> = Vec::new();
+        let pawn = Pawn::new(Position::new(PositionLetter::E,2));
+        pieces.push(Box::new(pawn));
         let notation = Notation::new();
         let clock = None;
         let result = None;
-        Game{game_type, players, board, notation, clock, result}
+        Game{board, players, pieces, notation, clock, result}
     }
 
     fn run(&mut self) {
@@ -32,15 +33,6 @@ impl Game {
     }
 }
 
-enum GameType {
-    Checkers,
-    Chess,
-    BugHouse,
-}
-
-impl GameType {
-
-}
 struct Player {
 
 }
@@ -60,7 +52,50 @@ impl Board {
         Board{}
     }
 }
+#[derive(Copy, Clone)]
+struct Position {
+    letter: PositionLetter,
+    number: usize,
+}
+impl Position {
+    fn new(letter: PositionLetter, number: usize) -> Self {
+        Position{letter,number}
+    }
+}
+#[derive(Copy, Clone)]
+enum PositionLetter {
+    A,
+    B,
+    C,
+    D,
+    E,
+    F,
+    G,
+    H,
+}
+trait Piece {
+    fn get_name(&self) -> &str;
+    fn get_position(&self) -> Position;
+}
 
+struct Pawn {
+    position: Position,
+}
+
+impl Pawn {
+    fn new(position: Position) -> Self {
+        Pawn{position}
+    }
+}
+
+impl Piece for Pawn {
+    fn get_name(&self) -> &str {
+        "Pawn"
+    }
+    fn get_position(&self) -> Position {
+        self.position
+    }
+}
 struct Notation {
 
 }
